@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Advanced Math Adventure</title>
+    <style>
+        :root {
+            --primary-color: #6200EA;
+            --secondary-color: #FF6D00;
+            --accent-color: #00BFA5;
+            --danger-color: #FF1744;
+            --correct-color: #00C853;
+            --incorrect-color: #FF1744;
+            --background-color: #f5f5f5;
+            --card-color: #fff;
+            --text-color: #333;
+            --coin-gold: #FFD700;
+            --coin-silver: #C0C0C0;
+            --coin-bronze: #CD7F32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-color);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Login Form Styles */
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 191, 165, 0.3);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            background-color: #00a896;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Game Menu Styles */
+        .game-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .game-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 180px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--accent-color);
+        }
+
+        .game-card:nth-child(1)::before {
+            background-color: #FF5722;
+        }
+
+        .game-card:nth-child(2)::before {
+            background-color: #2196F3;
+        }
+
+        .game-card:nth-child(3)::before {
+            background-color: #4CAF50;
+        }
+
+        .game-card:nth-child(4)::before {
+            background-color: #9C27B0;
+        }
+
+        .game-card:nth-child(5)::before {
+            background-color: #FFC107;
+        }
+
+        .game-card:nth-child(6)::before {
+            background-color: #795548;
+        }
+
+        .game-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .game-card p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .game-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Game Styles */
+        .game-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-info {
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .game-description {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .option {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option:hover {
+            background-color: #efefef;
+            transform: scale(1.02);
+        }
+
+        .option.selected {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .score-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .score-value {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .timer {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: rgba(0, 200, 83, 0.2);
+            color: var(--correct-color);
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: rgba(255, 23, 68, 0.2);
+            color: var(--incorrect-color);
+            display: block;
+        }
+
+        /* Result Styles */
+        .result-container {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: confetti-fall 5s ease-in-out infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Addition & Subtraction Game Styles */
+        .math-problem {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .operand {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .operator {
+            font-size: 2.5rem;
+            margin: 0 10px;
+        }
+
+        .answer-input {
+            padding: 10px;
+            font-size: 1.5rem;
+            width: 100px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+
+        .answer-input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 191, 165, 0.3);
+        }
+
+        /* Pattern Game Styles */
+        .pattern-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .pattern-item {
+            font-size: 2rem;
+            font-weight: bold;
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .pattern-item.shape {
+            padding: 15px;
+            background-color: transparent;
+        }
+
+        .shape {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-mark {
+            background-color: #f0f0f0;
+            font-size: 2rem;
+            font-weight: bold;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        /* Shape Game Styles */
+        .shape-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .shape-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .shape-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .shape-option.selected {
+            border-color: var(--accent-color);
+            background-color: rgba(0, 191, 165, 0.1);
+        }
+
+        .shape-option.correct {
+            border-color: var(--correct-color);
+            background-color: rgba(0, 200, 83, 0.1);
+        }
+
+        .shape-option.incorrect {
+            border-color: var(--incorrect-color);
+            background-color: rgba(255, 23, 68, 0.1);
+        }
+
+        .shape-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Money Game Styles */
+        .money-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .coin {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 4px solid #e0e0e0;
+        }
+
+        .coin:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .coin.selected {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .coin-gold {
+            background: radial-gradient(circle at 30% 30%, var(--coin-gold), #DAA520);
+        }
+
+        .coin-silver {
+            background: radial-gradient(circle at 30% 30%, var(--coin-silver), #A9A9A9);
+        }
+
+        .coin-bronze {
+            background: radial-gradient(circle at 30% 30%, var(--coin-bronze), #8B4513);
+        }
+
+        .bill {
+            width: 160px;
+            height: 70px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+        }
+
+        .bill:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .bill.selected {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .bill-1 {
+            background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
+        }
+
+        .bill-5 {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+        }
+
+        .bill-10 {
+            background: linear-gradient(135deg, #fff8e1, #fff3e0);
+        }
+
+        .bill-20 {
+            background: linear-gradient(135deg, #fff9c4, #ffecb3);
+        }
+
+        .bill-50 {
+            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+        }
+
+        .bill-100 {
+            background: linear-gradient(135deg, #e1bee7, #d1c4e9);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .animated {
+            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Mobile & Tablet Optimization */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .game-menu {
+                grid-template-columns: 1fr;
+            }
+
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+
+            .game-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .score-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .option {
+                padding: 15px;
+                font-size: 1.1rem;
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .shape-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .money-container {
+                justify-content: center;
+            }
+
+            .coin {
+                width: 70px;
+                height: 70px;
+            }
+
+            .bill {
+                width: 130px;
+                height: 60px;
+                font-size: 1rem;
+            }
+
+            .math-problem {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .pattern-container {
+                gap: 10px;
+            }
+
+            .pattern-item, .shape {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                padding: 10px;
+            }
+        }
+        
+        /* Tablet optimization */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .game-menu {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .options-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .btn {
+                min-width: 120px;
+            }
+
+            .shape-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Advanced Math Adventure</h1>
+            <p>Solve math challenges and learn new concepts!</p>
+        </div>
+        
+        <!-- Login Screen -->
+        <div id="login-screen" class="content animated">
+            <h2>Welcome to Advanced Math Adventure!</h2>
+            <p>Enter your details to start playing:</p>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="student-name">Your Name:</label>
+                    <input type="text" id="student-name" class="form-control" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-class">Your Class:</label>
+                    <input type="text" id="student-class" class="form-control" placeholder="Enter your class" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Start Adventure</button>
+            </form>
+        </div>
+        
+        <!-- Game Menu Screen -->
+        <div id="game-menu-screen" class="content hidden">
+            <div class="user-info">
+                <span id="player-info">Player: John | Class: 3A</span>
+            </div>
+            <h2>Choose a Challenge</h2>
+            <p>Select a math game to play:</p>
+            <div class="game-menu">
+                <div class="game-card" data-game="addition">
+                    <div class="game-icon">➕</div>
+                    <h3>Addition</h3>
+                    <p>Practice your addition skills</p>
+                </div>
+                <div class="game-card" data-game="subtraction">
+                    <div class="game-icon">➖</div>
+                    <h3>Subtraction</h3>
+                    <p>Practice your subtraction skills</p>
+                </div>
+                <div class="game-card" data-game="multiplication">
+                    <div class="game-icon">✖️</div>
+                    <h3>Multiplication</h3>
+                    <p>Practice your multiplication skills</p>
+                </div>
+                <div class="game-card" data-game="patterns">
+                    <div class="game-icon">🔄</div>
+                    <h3>Patterns</h3>
+                    <p>Find the next item in the pattern</p>
+                </div>
+                <div class="game-card" data-game="shapes">
+                    <div class="game-icon">📐</div>
+                    <h3>Shapes</h3>
+                    <p>Identify different shapes</p>
+                </div>
+                <div class="game-card" data-game="money">
+                    <div class="game-icon">💰</div>
+                    <h3>Money</h3>
+                    <p>Learn to identify coins and bills</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="content hidden">
+            <div class="game-header">
+                <div class="score-container">
+                    <div class="score-item">
+                        <span class="score-label">Score:</span>
+                        <span id="score" class="score-value">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Question:</span>
+                        <span id="question-counter" class="score-value">1/10</span>
+                    </div>
+                </div>
+                <div class="timer">
+                    <span>Time:</span>
+                    <span id="timer">00:00</span>
+                </div>
+            </div>
+            
+            <div class="game-info">
+                <h2 id="game-title" class="game-title">Addition</h2>
+                <p id="game-description" class="game-description">Solve the addition problems.</p>
+            </div>
+            
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            
+            <div class="game-container">
+                <!-- Addition Game -->
+                <div id="addition-game" class="question-container hidden">
+                    <div class="question">Solve the addition problem:</div>
+                    <div class="math-problem">
+                        <span class="operand" id="operand1">5</span>
+                        <span class="operator">+</span>
+                        <span class="operand" id="operand2">3</span>
+                        <span class="operator">=</span>
+                        <input type="number" class="answer-input" id="addition-answer" min="0" max="100">
+                    </div>
+                </div>
+                
+                <!-- Subtraction Game -->
+                <div id="subtraction-game" class="question-container hidden">
+                    <div class="question">Solve the subtraction problem:</div>
+                    <div class="math-problem">
+                        <span class="operand" id="subtraction-operand1">8</span>
+                        <span class="operator">-</span>
+                        <span class="operand" id="subtraction-operand2">3</span>
+                        <span class="operator">=</span>
+                        <input type="number" class="answer-input" id="subtraction-answer" min="0" max="100">
+                    </div>
+                </div>
+                
+                <!-- Multiplication Game -->
+                <div id="multiplication-game" class="question-container hidden">
+                    <div class="question">Solve the multiplication problem:</div>
+                    <div class="math-problem">
+                        <span class="operand" id="multiplication-operand1">4</span>
+                        <span class="operator">×</span>
+                        <span class="operand" id="multiplication-operand2">3</span>
+                        <span class="operator">=</span>
+                        <input type="number" class="answer-input" id="multiplication-answer" min="0" max="100">
+                    </div>
+                </div>
+                
+                <!-- Patterns Game -->
+                <div id="patterns-game" class="question-container hidden">
+                    <div class="question" id="pattern-question">What comes next in this pattern?</div>
+                    <div class="pattern-container" id="pattern-display">
+                        <!-- Pattern items will be added dynamically -->
+                        <div class="pattern-item">2</div>
+                        <div class="pattern-item">4</div>
+                        <div class="pattern-item">6</div>
+                        <div class="pattern-item">8</div>
+                        <div class="question-mark">?</div>
+                    </div>
+                    <div class="options-container" id="pattern-options">
+                        <!-- Options will be added dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Shapes Game -->
+                <div id="shapes-game" class="question-container hidden">
+                    <div class="question" id="shape-question">Identify this shape:</div>
+                    <div class="shape" id="shape-display">
+                        <!-- SVG shape will be added dynamically -->
+                    </div>
+                    <div class="shape-container" id="shape-options">
+                        <!-- Shape options will be added dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Money Game -->
+                <div id="money-game" class="question-container hidden">
+                    <div class="question" id="money-question">What is the value of this coin/bill?</div>
+                    <div class="money-container" id="money-display">
+                        <!-- Money item will be added dynamically -->
+                    </div>
+                    <div class="options-container" id="money-options">
+                        <!-- Options will be added dynamically -->
+                    </div>
+                </div>
+                
+                <div id="feedback" class="feedback"></div>
+                
+                <div class="controls">
+                    <button id="check-btn" class="btn btn-primary">Check Answer</button>
+                    <button id="next-btn" class="btn btn-secondary hidden">Next Question</button>
+                    <button id="back-to-menu-btn" class="btn btn-danger">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results-screen" class="content hidden">
+            <div class="result-container">
+                <h2 class="result-title">Challenge Complete!</h2>
+                <div class="result-score">0</div>
+                <div class="result-message">Great job! You're becoming a math master!</div>
+                <div class="controls">
+                    <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+                    <button id="menu-btn" class="btn btn-secondary">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            studentName: '',
+            studentClass: '',
+            currentGame: null,
+            score: 0,
+            questionIndex: 0,
+            totalQuestions: 10,
+            questions: [],
+            currentAnswer: null,
+            timerInterval: null,
+            timeElapsed: 0
+        };
+
+        // DOM Elements
+        const loginScreen = document.getElementById('login-screen');
+        const gameMenuScreen = document.getElementById('game-menu-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        
+        const loginForm = document.getElementById('login-form');
+        const playerInfo = document.getElementById('player-info');
+        const gameCards = document.querySelectorAll('.game-card');
+        
+        const scoreElement = document.getElementById('score');
+        const questionCounter = document.getElementById('question-counter');
+        const timerElement = document.getElementById('timer');
+        const gameTitle = document.getElementById('game-title');
+        const gameDescription = document.getElementById('game-description');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const additionGame = document.getElementById('addition-game');
+        const subtractionGame = document.getElementById('subtraction-game');
+        const multiplicationGame = document.getElementById('multiplication-game');
+        const patternsGame = document.getElementById('patterns-game');
+        const shapesGame = document.getElementById('shapes-game');
+        const moneyGame = document.getElementById('money-game');
+        
+        const operand1 = document.getElementById('operand1');
+        const operand2 = document.getElementById('operand2');
+        const additionAnswer = document.getElementById('addition-answer');
+        
+        const subtractionOperand1 = document.getElementById('subtraction-operand1');
+        const subtractionOperand2 = document.getElementById('subtraction-operand2');
+        const subtractionAnswer = document.getElementById('subtraction-answer');
+        
+        const multiplicationOperand1 = document.getElementById('multiplication-operand1');
+        const multiplicationOperand2 = document.getElementById('multiplication-operand2');
+        const multiplicationAnswer = document.getElementById('multiplication-answer');
+        
+        const patternQuestion = document.getElementById('pattern-question');
+        const patternDisplay = document.getElementById('pattern-display');
+        const patternOptions = document.getElementById('pattern-options');
+        
+        const shapeQuestion = document.getElementById('shape-question');
+        const shapeDisplay = document.getElementById('shape-display');
+        const shapeOptions = document.getElementById('shape-options');
+        
+        const moneyQuestion = document.getElementById('money-question');
+        const moneyDisplay = document.getElementById('money-display');
+        const moneyOptions = document.getElementById('money-options');
+        
+        const feedbackElement = document.getElementById('feedback');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const backToMenuBtn = document.getElementById('back-to-menu-btn');
+        
+        const resultScore = document.querySelector('.result-score');
+        const resultMessage = document.querySelector('.result-message');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const menuBtn = document.getElementById('menu-btn');
+
+        // Game Data
+        const shapes = [
+            { name: 'Circle', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="25" fill="#FF5722" /></svg>' },
+            { name: 'Square', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><rect x="5" y="5" width="50" height="50" fill="#2196F3" /></svg>' },
+            { name: 'Triangle', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,5 55,55 5,55" fill="#4CAF50" /></svg>' },
+            { name: 'Rectangle', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><rect x="5" y="15" width="50" height="30" fill="#9C27B0" /></svg>' },
+            { name: 'Oval', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><ellipse cx="30" cy="30" rx="25" ry="15" fill="#FFC107" /></svg>' },
+            { name: 'Diamond', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,5 55,30 30,55 5,30" fill="#795548" /></svg>' },
+            { name: 'Pentagon', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,5 55,20 45,50 15,50 5,20" fill="#FF9800" /></svg>' },
+            { name: 'Hexagon', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><polygon points="15,5 45,5 55,30 45,55 15,55 5,30" fill="#8BC34A" /></svg>' },
+            { name: 'Star', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><polygon points="30,5 38,20 55,23 42,35 46,52 30,44 14,52 18,35 5,23 22,20" fill="#FFEB3B" /></svg>' },
+            { name: 'Heart', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><path d="M30,55 L25,50 C10,35 5,30 5,20 C5,14 10,10 15,10 C20,10 25,14 30,20 C35,14 40,10 45,10 C50,10 55,14 55,20 C55,30 50,35 35,50 L30,55" fill="#F44336" /></svg>' }
+        ];
+
+        const money = [
+            { type: 'coin', value: '1¢', name: 'Penny', class: 'coin-bronze', display: '<div class="coin coin-bronze">1¢</div>' },
+            { type: 'coin', value: '5¢', name: 'Nickel', class: 'coin-silver', display: '<div class="coin coin-silver">5¢</div>' },
+            { type: 'coin', value: '10¢', name: 'Dime', class: 'coin-silver', display: '<div class="coin coin-silver">10¢</div>' },
+            { type: 'coin', value: '25¢', name: 'Quarter', class: 'coin-silver', display: '<div class="coin coin-silver">25¢</div>' },
+            { type: 'coin', value: '50¢', name: 'Half Dollar', class: 'coin-silver', display: '<div class="coin coin-silver">50¢</div>' },
+            { type: 'coin', value: '$1', name: 'Dollar Coin', class: 'coin-gold', display: '<div class="coin coin-gold">$1</div>' },
+            { type: 'bill', value: '$1', name: 'One Dollar', class: 'bill-1', display: '<div class="bill bill-1">$1</div>' },
+            { type: 'bill', value: '$5', name: 'Five Dollar', class: 'bill-5', display: '<div class="bill bill-5">$5</div>' },
+            { type: 'bill', value: '$10', name: 'Ten Dollar', class: 'bill-10', display: '<div class="bill bill-10">$10</div>' },
+            { type: 'bill', value: '$20', name: 'Twenty Dollar', class: 'bill-20', display: '<div class="bill bill-20">$20</div>' },
+            { type: 'bill', value: '$50', name: 'Fifty Dollar', class: 'bill-50', display: '<div class="bill bill-50">$50</div>' },
+            { type: 'bill', value: '$100', name: 'Hundred Dollar', class: 'bill-100', display: '<div class="bill bill-100">$100</div>' }
+        ];
+
+        // Helper Functions
+        function showScreen(screen) {
+            loginScreen.classList.add('hidden');
+            gameMenuScreen.classList.add('hidden');
+            gameScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            
+            screen.classList.remove('hidden');
+            screen.classList.add('animated');
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
+        
+        function startTimer() {
+            clearInterval(gameState.timerInterval);
+            gameState.timeElapsed = 0;
+            timerElement.textContent = formatTime(gameState.timeElapsed);
+            
+            gameState.timerInterval = setInterval(() => {
+                gameState.timeElapsed++;
+                timerElement.textContent = formatTime(gameState.timeElapsed);
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            clearInterval(gameState.timerInterval);
+        }
+        
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        function getRandomNumbers(min, max, count) {
+            const numbers = [];
+            while (numbers.length < count) {
+                const num = getRandomNumber(min, max);
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+            }
+            return numbers;
+        }
+        
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function updateProgressBar() {
+            const progress = (gameState.questionIndex / gameState.totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        function showFeedback(isCorrect, message) {
+            feedbackElement.textContent = message || (isCorrect ? 'Correct!' : 'Incorrect!');
+            feedbackElement.className = 'feedback';
+            feedbackElement.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            checkBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+        
+        function hideAllGames() {
+            additionGame.classList.add('hidden');
+            subtractionGame.classList.add('hidden');
+            multiplicationGame.classList.add('hidden');
+            patternsGame.classList.add('hidden');
+            shapesGame.classList.add('hidden');
+            moneyGame.classList.add('hidden');
+        }
+        
+        function createConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.style.position = 'absolute';
+            confettiContainer.style.top = '0';
+            confettiContainer.style.left = '0';
+            confettiContainer.style.width = '100%';
+            confettiContainer.style.height = '100%';
+            confettiContainer.style.overflow = 'hidden';
+            confettiContainer.style.pointerEvents = 'none';
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+                confetti.style.animationDelay = `${Math.random() * 5}s`;
+                confettiContainer.appendChild(confetti);
+            }
+            
+            resultsScreen.appendChild(confettiContainer);
+            
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 5000);
+        }
+        
+        // Game Generators
+        function generateAdditionQuestions() {
+            const questions = [];
+            
+            for (let i = 0; i < gameState.totalQuestions; i++) {
+                const num1 = getRandomNumber(1, 20);
+                const num2 = getRandomNumber(1, 20);
+                const sum = num1 + num2;
+                
+                questions.push({
+                    num1,
+                    num2,
+                    correctAnswer: sum
+                });
+            }
+            
+            return questions;
+        }
+        
+        function generateSubtractionQuestions() {
+            const questions = [];
+            
+            for (let i = 0; i < gameState.totalQuestions; i++) {
+                const num1 = getRandomNumber(10, 30);
+                const num2 = getRandomNumber(1, num1);
+                const difference = num1 - num2;
+                
+                questions.push({
+                    num1,
+                    num2,
+                    correctAnswer: difference
+                });
+            }
+            
+            return questions;
+        }
+        
+        function generateMultiplicationQuestions() {
+            const questions = [];
+            
+            for (let i = 0; i < gameState.totalQuestions; i++) {
+                const num1 = getRandomNumber(1, 10);
+                const num2 = getRandomNumber(1, 10);
+                const product = num1 * num2;
+                
+                questions.push({
+                    num1,
+                    num2,
+                    correctAnswer: product
+                });
+            }
+            
+            return questions;
+        }
+        
+        function generatePatternQuestions() {
+            const questions = [];
+            const patternTypes = ['arithmetic', 'geometric', 'alternating', 'shape'];
+            
+            for (let i = 0; i < gameState.totalQuestions; i++) {
+                const patternType = patternTypes[getRandomNumber(0, patternTypes.length - 1)];
+                
+                if (patternType === 'arithmetic') {
+                    // Arithmetic sequence (add/subtract same number)
+                    const start = getRandomNumber(1, 20);
+                    const increment = getRandomNumber(1, 5);
+                    const sequence = Array(4).fill().map((_, idx) => start + increment * idx);
+                    const nextNumber = start + increment * 4;
+                    
+                    // Generate wrong options
+                    const wrongOptions = [
+                        nextNumber + increment,
+                        nextNumber - 1,
+                        nextNumber + 2
+                    ];
+                    
+                    questions.push({
+                        type: 'arithmetic',
+                        sequence,
+                        correctAnswer: nextNumber,
+                        options: shuffle([nextNumber, ...wrongOptions]),
+                        displayType: 'number'
+                    });
+                } else if (patternType === 'geometric') {
+                    // Geometric sequence (multiply/divide by same number)
+                    const start = getRandomNumber(1, 3);
+                    const multiplier = getRandomNumber(2, 3);
+                    const sequence = Array(4).fill().map((_, idx) => start * Math.pow(multiplier, idx));
+                    const nextNumber = start * Math.pow(multiplier, 4);
+                    
+                    // Generate wrong options
+                    const wrongOptions = [
+                        nextNumber + multiplier,
+                        nextNumber - multiplier,
+                        nextNumber * 2
+                    ];
+                    
+                    questions.push({
+                        type: 'geometric',
+                        sequence,
+                        correctAnswer: nextNumber,
+                        options: shuffle([nextNumber, ...wrongOptions]),
+                        displayType: 'number'
+                    });
+                } else if (patternType === 'alternating') {
+                    // Alternating pattern
+                    const patterns = [
+                        { sequence: [2, 5, 2, 5], next: 2 },
+                        { sequence: [1, 3, 5, 7], next: 9 },
+                        { sequence: [10, 5, 10, 5], next: 10 },
+                        { sequence: [3, 6, 9, 12], next: 15 }
+                    ];
+                    
+                    const selectedPattern = patterns[getRandomNumber(0, patterns.length - 1)];
+                    
+                    // Generate wrong options
+                    const wrongOptions = [
+                        selectedPattern.next + 2,
+                        selectedPattern.next - 1,
+                        selectedPattern.next * 2
+                    ];
+                    
+                    questions.push({
+                        type: 'alternating',
+                        sequence: selectedPattern.sequence,
+                        correctAnswer: selectedPattern.next,
+                        options: shuffle([selectedPattern.next, ...wrongOptions]),
+                        displayType: 'number'
+                    });
+                } else if (patternType === 'shape') {
+                    // Shape patterns
+                    const shapePatterns = [
+                        { 
+                            sequence: ['Circle', 'Square', 'Triangle', 'Circle'],
+                            next: 'Square',
+                            options: ['Square', 'Triangle', 'Rectangle', 'Pentagon']
+                        },
+                        { 
+                            sequence: ['Square', 'Rectangle', 'Square', 'Rectangle'],
+                            next: 'Square',
+                            options: ['Square', 'Triangle', 'Rectangle', 'Pentagon']
+                        },
+                        { 
+                            sequence: ['Circle', 'Triangle', 'Pentagon', 'Circle'],
+                            next: 'Triangle',
+                            options: ['Square', 'Triangle', 'Rectangle', 'Pentagon']
+                        }
+                    ];
+                    
+                    const selectedPattern = shapePatterns[getRandomNumber(0, shapePatterns.length - 1)];
+                    
+                    questions.push({
+                        type: 'shape',
+                        sequence: selectedPattern.sequence,
+                        correctAnswer: selectedPattern.next,
+                        options: shuffle(selectedPattern.options),
+                        displayType: 'shape'
+                    });
+                }
+            }
+            
+            return questions;
+        }
+        
+        function generateShapeQuestions() {
+            const questions = [];
+            
+            // Ensure each shape appears at least once
+            const shuffledShapes = shuffle([...shapes]);
+            
+            for (let i = 0; i < gameState.totalQuestions; i++) {
+                const shapeIndex = i % shapes.length;
+                const correctShape = shuffledShapes[shapeIndex];
+                
+                // Get 3 random incorrect shapes
+                const otherShapes = shuffledShapes.filter(shape => shape.name !== correctShape.name);
+                const wrongOptions = shuffle(otherShapes).slice(0, 3);
+                
+                questions.push({
+                    shape: correctShape,
+                    correctAnswer: correctShape.name,
+                    options: shuffle([correctShape, ...wrongOptions])
+                });
+            }
+            
+            return questions;
+        }
+        
+        function generateMoneyQuestions() {
+            const questions = [];
+            
+            // Ensure each money item appears at least once
+            const shuffledMoney = shuffle([...money]);
+            
+            for (let i = 0; i < gameState.totalQuestions; i++) {
+                const moneyIndex = i % money.length;
+                const correctMoney = shuffledMoney[moneyIndex];
+                
+                // Generate options
+                let options;
+                if (correctMoney.type === 'coin') {
+                    const coins = money.filter(item => item.type === 'coin');
+                    options = shuffle([correctMoney.value, ...coins.filter(coin => coin.value !== correctMoney.value).map(coin => coin.value).slice(0, 3)]);
+                } else {
+                    const bills = money.filter(item => item.type === 'bill');
+                    options = shuffle([correctMoney.value, ...bills.filter(bill => bill.value !== correctMoney.value).map(bill => bill.value).slice(0, 3)]);
+                }
+                
+                questions.push({
+                    money: correctMoney,
+                    correctAnswer: correctMoney.value,
+                    options
+                });
+            }
+            
+            return questions;
+        }
+        
+        // Game Initialization
+        function initAdditionGame() {
+            gameTitle.textContent = 'Addition';
+            gameDescription.textContent = 'Solve the addition problems.';
+            
+            // Generate questions
+            gameState.questions = generateAdditionQuestions();
+            
+            // Reset state
+            gameState.questionIndex = 0;
+            gameState.score = 0;
+            
+            // Show first question
+            showAdditionQuestion();
+        }
+        
+        function initSubtractionGame() {
+            gameTitle.textContent = 'Subtraction';
+            gameDescription.textContent = 'Solve the subtraction problems.';
+            
+            // Generate questions
+            gameState.questions = generateSubtractionQuestions();
+            
+            // Reset state
+            gameState.questionIndex = 0;
+            gameState.score = 0;
+            
+            // Show first question
+            showSubtractionQuestion();
+        }
+        
+        function initMultiplicationGame() {
+            gameTitle.textContent = 'Multiplication';
+            gameDescription.textContent = 'Solve the multiplication problems.';
+            
+            // Generate questions
+            gameState.questions = generateMultiplicationQuestions();
+            
+            // Reset state
+            gameState.questionIndex = 0;
+            gameState.score = 0;
+            
+            // Show first question
+            showMultiplicationQuestion();
+        }
+        
+        function initPatternsGame() {
+            gameTitle.textContent = 'Patterns';
+            gameDescription.textContent = 'Find the next item in the pattern.';
+            
+            // Generate questions
+            gameState.questions = generatePatternQuestions();
+            
+            // Reset state
+            gameState.questionIndex = 0;
+            gameState.score = 0;
+            
+            // Show first question
+            showPatternQuestion();
+        }
+        
+        function initShapesGame() {
+            gameTitle.textContent = 'Shapes';
+            gameDescription.textContent = 'Identify the different shapes.';
+            
+            // Generate questions
+            gameState.questions = generateShapeQuestions();
+            
+            // Reset state
+            gameState.questionIndex = 0;
+            gameState.score = 0;
+            
+            // Show first question
+            showShapeQuestion();
+        }
+        
+        function initMoneyGame() {
+            gameTitle.textContent = 'Money';
+            gameDescription.textContent = 'Identify the values of coins and bills.';
+            
+            // Generate questions
+            gameState.questions = generateMoneyQuestions();
+            
+            // Reset state
+            gameState.questionIndex = 0;
+            gameState.score = 0;
+            
+            // Show first question
+            showMoneyQuestion();
+        }
+        
+        // Game Question Renderers
+        function showAdditionQuestion() {
+            hideAllGames();
+            additionGame.classList.remove('hidden');
+            
+            const question = gameState.questions[gameState.questionIndex];
+            operand1.textContent = question.num1;
+            operand2.textContent = question.num2;
+            
+            // Clear previous answer
+            additionAnswer.value = '';
+            
+            // Reset UI state
+            feedbackElement.className = 'feedback';
+            checkBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update question counter
+            questionCounter.textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+            updateProgressBar();
+            
+            // Focus on input
+            setTimeout(() => {
+                additionAnswer.focus();
+            }, 300);
+        }
+        
+        function showSubtractionQuestion() {
+            hideAllGames();
+            subtractionGame.classList.remove('hidden');
+            
+            const question = gameState.questions[gameState.questionIndex];
+            subtractionOperand1.textContent = question.num1;
+            subtractionOperand2.textContent = question.num2;
+            
+            // Clear previous answer
+            subtractionAnswer.value = '';
+            
+            // Reset UI state
+            feedbackElement.className = 'feedback';
+            checkBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update question counter
+            questionCounter.textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+            updateProgressBar();
+            
+            // Focus on input
+            setTimeout(() => {
+                subtractionAnswer.focus();
+            }, 300);
+        }
+        
+        function showMultiplicationQuestion() {
+            hideAllGames();
+            multiplicationGame.classList.remove('hidden');
+            
+            const question = gameState.questions[gameState.questionIndex];
+            multiplicationOperand1.textContent = question.num1;
+            multiplicationOperand2.textContent = question.num2;
+            
+            // Clear previous answer
+            multiplicationAnswer.value = '';
+            
+            // Reset UI state
+            feedbackElement.className = 'feedback';
+            checkBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update question counter
+            questionCounter.textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+            updateProgressBar();
+            
+            // Focus on input
+            setTimeout(() => {
+                multiplicationAnswer.focus();
+            }, 300);
+        }
+        
+        function showPatternQuestion() {
+            hideAllGames();
+            patternsGame.classList.remove('hidden');
+            
+            const question = gameState.questions[gameState.questionIndex];
+            
+            // Clear previous pattern
+            patternDisplay.innerHTML = '';
+            patternOptions.innerHTML = '';
+            
+            // Add pattern items
+            if (question.displayType === 'number') {
+                question.sequence.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'pattern-item';
+                    itemElement.textContent = item;
+                    patternDisplay.appendChild(itemElement);
+                });
+                
+                // Add question mark
+                const questionMark = document.createElement('div');
+                questionMark.className = 'question-mark';
+                questionMark.textContent = '?';
+                patternDisplay.appendChild(questionMark);
+                
+                // Add options
+                question.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.textContent = option;
+                    optionElement.addEventListener('click', () => {
+                        document.querySelectorAll('#pattern-options .option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        optionElement.classList.add('selected');
+                        gameState.currentAnswer = option;
+                    });
+                    patternOptions.appendChild(optionElement);
+                });
+            } else if (question.displayType === 'shape') {
+                question.sequence.forEach(shapeName => {
+                    const shapeObj = shapes.find(s => s.name === shapeName);
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'pattern-item shape';
+                    itemElement.innerHTML = shapeObj.svg;
+                    patternDisplay.appendChild(itemElement);
+                });
+                
+                // Add question mark
+                const questionMark = document.createElement('div');
+                questionMark.className = 'question-mark';
+                questionMark.textContent = '?';
+                patternDisplay.appendChild(questionMark);
+                
+                // Add options
+                question.options.forEach(shapeName => {
+                    const shapeObj = shapes.find(s => s.name === shapeName);
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.innerHTML = shapeObj.svg;
+                    optionElement.addEventListener('click', () => {
+                        document.querySelectorAll('#pattern-options .option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        optionElement.classList.add('selected');
+                        gameState.currentAnswer = shapeName;
+                    });
+                    patternOptions.appendChild(optionElement);
+                });
+            }
+            
+            // Reset state
+            gameState.currentAnswer = null;
+            feedbackElement.className = 'feedback';
+            checkBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update question counter
+            questionCounter.textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+            updateProgressBar();
+        }
+        
+        function showShapeQuestion() {
+            hideAllGames();
+            shapesGame.classList.remove('hidden');
+            
+            const question = gameState.questions[gameState.questionIndex];
+            
+            // Display the shape
+            shapeDisplay.innerHTML = question.shape.svg;
+            
+            // Clear previous options
+            shapeOptions.innerHTML = '';
+            
+            // Add shape options
+            question.options.forEach(shape => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'shape-option';
+                
+                const shapeNameElement = document.createElement('div');
+                shapeNameElement.className = 'shape-name';
+                shapeNameElement.textContent = shape.name;
+                
+                optionElement.appendChild(shapeNameElement);
+                
+                optionElement.addEventListener('click', () => {
+                    document.querySelectorAll('.shape-option').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    optionElement.classList.add('selected');
+                    gameState.currentAnswer = shape.name;
+                });
+                
+                shapeOptions.appendChild(optionElement);
+            });
+            
+            // Reset state
+            gameState.currentAnswer = null;
+            feedbackElement.className = 'feedback';
+            checkBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update question counter
+            questionCounter.textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+            updateProgressBar();
+        }
+        
+        function showMoneyQuestion() {
+            hideAllGames();
+            moneyGame.classList.remove('hidden');
+            
+            const question = gameState.questions[gameState.questionIndex];
+            
+            // Display the money item
+            moneyDisplay.innerHTML = question.money.display;
+            
+            // Clear previous options
+            moneyOptions.innerHTML = '';
+            
+            // Add money options
+            question.options.forEach(value => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = value;
+                
+                optionElement.addEventListener('click', () => {
+                    document.querySelectorAll('#money-options .option').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    optionElement.classList.add('selected');
+                    gameState.currentAnswer = value;
+                });
+                
+                moneyOptions.appendChild(optionElement);
+            });
+            
+            // Reset state
+            gameState.currentAnswer = null;
+            feedbackElement.className = 'feedback';
+            checkBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update question counter
+            questionCounter.textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+            updateProgressBar();
+        }
+        
+        // Answer Checking
+        function checkAdditionAnswer() {
+            const question = gameState.questions[gameState.questionIndex];
+            const userAnswer = parseInt(additionAnswer.value);
+            
+            if (isNaN(userAnswer)) {
+                showFeedback(false, 'Please enter a number!');
+                return;
+            }
+            
+            const isCorrect = userAnswer === question.correctAnswer;
+            
+            if (isCorrect) {
+                gameState.score++;
+                scoreElement.textContent = gameState.score;
+            }
+            
+            // Show correct answer if wrong
+            if (!isCorrect) {
+                additionAnswer.value = question.correctAnswer;
+            }
+            
+            showFeedback(isCorrect);
+        }
+        
+        function checkSubtractionAnswer() {
+            const question = gameState.questions[gameState.questionIndex];
+            const userAnswer = parseInt(subtractionAnswer.value);
+            
+            if (isNaN(userAnswer)) {
+                showFeedback(false, 'Please enter a number!');
+                return;
+            }
+            
+            const isCorrect = userAnswer === question.correctAnswer;
+            
+            if (isCorrect) {
+                gameState.score++;
+                scoreElement.textContent = gameState.score;
+            }
+            
+            // Show correct answer if wrong
+            if (!isCorrect) {
+                subtractionAnswer.value = question.correctAnswer;
+            }
+            
+            showFeedback(isCorrect);
+        }
+        
+        function checkMultiplicationAnswer() {
+            const question = gameState.questions[gameState.questionIndex];
+            const userAnswer = parseInt(multiplicationAnswer.value);
+            
+            if (isNaN(userAnswer)) {
+                showFeedback(false, 'Please enter a number!');
+                return;
+            }
+            
+            const isCorrect = userAnswer === question.correctAnswer;
+            
+            if (isCorrect) {
+                gameState.score++;
+                scoreElement.textContent = gameState.score;
+            }
+            
+            // Show correct answer if wrong
+            if (!isCorrect) {
+                multiplicationAnswer.value = question.correctAnswer;
+            }
+            
+            showFeedback(isCorrect);
+        }
+        
+        function checkPatternAnswer() {
+            const question = gameState.questions[gameState.questionIndex];
+            
+            if (!gameState.currentAnswer) {
+                showFeedback(false, 'Please select an answer!');
+                return;
+            }
+            
+            const isCorrect = gameState.currentAnswer == question.correctAnswer;
+            
+            if (isCorrect) {
+                gameState.score++;
+                scoreElement.textContent = gameState.score;
+            }
+            
+            // Highlight correct and incorrect options
+            document.querySelectorAll('#pattern-options .option').forEach(option => {
+                if (option.textContent == question.correctAnswer || 
+                    (question.displayType === 'shape' && option.querySelector('svg') && 
+                     shapes.find(s => s.name === question.correctAnswer).svg === option.querySelector('svg').outerHTML)) {
+                    option.classList.add('correct');
+                } else if ((option.textContent == gameState.currentAnswer || 
+                           (question.displayType === 'shape' && option.querySelector('svg') && 
+                            shapes.find(s => s.name === gameState.currentAnswer).svg === option.querySelector('svg').outerHTML)) && 
+                          !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            showFeedback(isCorrect);
+        }
+        
+        function checkShapeAnswer() {
+            const question = gameState.questions[gameState.questionIndex];
+            
+            if (!gameState.currentAnswer) {
+                showFeedback(false, 'Please select a shape!');
+                return;
+            }
+            
+            const isCorrect = gameState.currentAnswer === question.correctAnswer;
+            
+            if (isCorrect) {
+                gameState.score++;
+                scoreElement.textContent = gameState.score;
+            }
+            
+            // Highlight correct and incorrect options
+            document.querySelectorAll('.shape-option').forEach(option => {
+                if (option.querySelector('.shape-name').textContent === question.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option.querySelector('.shape-name').textContent === gameState.currentAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            showFeedback(isCorrect);
+        }
+        
+        function checkMoneyAnswer() {
+            const question = gameState.questions[gameState.questionIndex];
+            
+            if (!gameState.currentAnswer) {
+                showFeedback(false, 'Please select an answer!');
+                return;
+            }
+            
+            const isCorrect = gameState.currentAnswer === question.correctAnswer;
+            
+            if (isCorrect) {
+                gameState.score++;
+                scoreElement.textContent = gameState.score;
+            }
+            
+            // Highlight correct and incorrect options
+            document.querySelectorAll('#money-options .option').forEach(option => {
+                if (option.textContent === question.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option.textContent === gameState.currentAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            showFeedback(isCorrect);
+        }
+        
+        // Next Question Handler
+        function nextQuestion() {
+            gameState.questionIndex++;
+            
+            if (gameState.questionIndex >= gameState.totalQuestions) {
+                showResults();
+                return;
+            }
+            
+            switch(gameState.currentGame) {
+                case 'addition':
+                    showAdditionQuestion();
+                    break;
+                case 'subtraction':
+                    showSubtractionQuestion();
+                    break;
+                case 'multiplication':
+                    showMultiplicationQuestion();
+                    break;
+                case 'patterns':
+                    showPatternQuestion();
+                    break;
+                case 'shapes':
+                    showShapeQuestion();
+                    break;
+                case 'money':
+                    showMoneyQuestion();
+                    break;
+            }
+        }
+        
+        // Show Results
+        function showResults() {
+            stopTimer();
+            showScreen(resultsScreen);
+            
+            resultScore.textContent = `${gameState.score}/${gameState.totalQuestions}`;
+            
+            // Set message based on score percentage
+            const percentage = (gameState.score / gameState.totalQuestions) * 100;
+            let message;
+            
+            if (percentage >= 90) {
+                message = 'Amazing! You\'re a math genius! 🌟';
+                createConfetti();
+            } else if (percentage >= 70) {
+                message = 'Great job! You\'re getting really good at this! 🎉';
+                createConfetti();
+            } else if (percentage >= 50) {
+                message = 'Good effort! Keep practicing to improve! 👍';
+            } else {
+                message = 'Keep practicing! You\'ll get better with time! 💪';
+            }
+            
+            resultMessage.textContent = message;
+        }
+        
+        // Event Listeners
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nameInput = document.getElementById('student-name');
+            const classInput = document.getElementById('student-class');
+            
+            gameState.studentName = nameInput.value.trim();
+            gameState.studentClass = classInput.value.trim();
+            
+            if (gameState.studentName && gameState.studentClass) {
+                playerInfo.textContent = `Player: ${gameState.studentName} | Class: ${gameState.studentClass}`;
+                showScreen(gameMenuScreen);
+            }
+        });
+        
+        gameCards.forEach(card => {
+            card.addEventListener('click', () => {
+                gameState.currentGame = card.dataset.game;
+                showScreen(gameScreen);
+                
+                // Initialize the selected game
+                switch(gameState.currentGame) {
+                    case 'addition':
+                        initAdditionGame();
+                        break;
+                    case 'subtraction':
+                        initSubtractionGame();
+                        break;
+                    case 'multiplication':
+                        initMultiplicationGame();
+                        break;
+                    case 'patterns':
+                        initPatternsGame();
+                        break;
+                    case 'shapes':
+                        initShapesGame();
+                        break;
+                    case 'money':
+                        initMoneyGame();
+                        break;
+                }
+                
+                startTimer();
+            });
+        });
+        
+        checkBtn.addEventListener('click', () => {
+            switch(gameState.currentGame) {
+                case 'addition':
+                    checkAdditionAnswer();
+                    break;
+                case 'subtraction':
+                    checkSubtractionAnswer();
+                    break;
+                case 'multiplication':
+                    checkMultiplicationAnswer();
+                    break;
+                case 'patterns':
+                    checkPatternAnswer();
+                    break;
+                case 'shapes':
+                    checkShapeAnswer();
+                    break;
+                case 'money':
+                    checkMoneyAnswer();
+                    break;
+            }
+        });
+        
+        // Add enter key support for text inputs
+        additionAnswer.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                checkAdditionAnswer();
+            }
+        });
+        
+        subtractionAnswer.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                checkSubtractionAnswer();
+            }
+        });
+        
+        multiplicationAnswer.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                checkMultiplicationAnswer();
+            }
+        });
+        
+        nextBtn.addEventListener('click', nextQuestion);
+        
+        backToMenuBtn.addEventListener('click', () => {
+            stopTimer();
+            showScreen(gameMenuScreen);
+        });
+        
+        playAgainBtn.addEventListener('click', () => {
+            showScreen(gameScreen);
+            
+            // Reinitialize the same game
+            switch(gameState.currentGame) {
+                case 'addition':
+                    initAdditionGame();
+                    break;
+                case 'subtraction':
+                    initSubtractionGame();
+                    break;
+                case 'multiplication':
+                    initMultiplicationGame();
+                    break;
+                case 'patterns':
+                    initPatternsGame();
+                    break;
+                case 'shapes':
+                    initShapesGame();
+                    break;
+                case 'money':
+                    initMoneyGame();
+                    break;
+            }
+            
+            startTimer();
+        });
+        
+        menuBtn.addEventListener('click', () => {
+            showScreen(gameMenuScreen);
+        });
+    </script>
+</body>
+</html>
