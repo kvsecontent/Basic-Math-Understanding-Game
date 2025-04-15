@@ -880,7 +880,7 @@
                 <div class="game-card" data-game="money">
                     <div class="game-icon">💰</div>
                     <h3>Indian Currency</h3>
-                    <p>Learn to identify Indian Rupee coins and notes</p>
+                    <p>Learn to use money in real-world situations</p>
                 </div>
             </div>
         </div>
@@ -979,12 +979,88 @@
                 
                 <!-- Money Game -->
                 <div id="money-game" class="question-container hidden">
-                    <div class="question" id="money-question">What is the value of this coin/bill?</div>
-                    <div class="money-container" id="money-display">
-                        <!-- Money item will be added dynamically -->
+                    <div id="currency-identification" class="hidden">
+                        <div class="question" id="currency-question">What is the value of this Indian currency?</div>
+                        <div class="money-container" id="currency-display">
+                            <!-- Currency item will be added dynamically -->
+                        </div>
+                        <div class="options-container" id="currency-options">
+                            <!-- Options will be added dynamically -->
+                        </div>
                     </div>
-                    <div class="options-container" id="money-options">
-                        <!-- Options will be added dynamically -->
+                    
+                    <div id="shopping-section" class="hidden">
+                        <div class="question" id="shopping-question">Buy items within your budget of ₹500!</div>
+                        
+                        <div class="shop-container">
+                            <div class="wallet">
+                                <div class="wallet-header">
+                                    <span>Your Budget: </span>
+                                    <span id="budget-amount">₹500</span>
+                                </div>
+                                <div class="budget-bar">
+                                    <div id="budget-progress" class="budget-progress"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="shop-items" id="shop-items">
+                                <!-- Shop items will be added dynamically -->
+                            </div>
+                            
+                            <div class="cart">
+                                <div class="cart-header">
+                                    <span>Your Shopping Cart</span>
+                                    <span id="cart-count">(0 items)</span>
+                                </div>
+                                <div class="cart-items" id="cart-items">
+                                    <!-- Cart items will be added dynamically -->
+                                    <div id="empty-cart-message">Your cart is empty. Start shopping!</div>
+                                </div>
+                                <div class="cart-total">
+                                    <span>Total:</span>
+                                    <span id="cart-total">₹0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="change-section" class="hidden">
+                        <div class="question" id="change-question">Make the correct change!</div>
+                        
+                        <div class="change-container">
+                            <div class="transaction-details">
+                                <div class="transaction-item">
+                                    <span>Purchase Amount:</span>
+                                    <span id="purchase-amount">₹65</span>
+                                </div>
+                                <div class="transaction-item">
+                                    <span>Customer Paid:</span>
+                                    <span id="customer-paid">₹100</span>
+                                </div>
+                                <div class="transaction-item">
+                                    <span>Change Due:</span>
+                                    <span id="change-due">₹35</span>
+                                </div>
+                            </div>
+                            
+                            <div class="change-workspace">
+                                <div class="change-header">Select coins and notes to make the change:</div>
+                                <div class="change-money" id="selected-change">
+                                    <!-- Selected change will appear here -->
+                                </div>
+                                <div class="money-options" id="change-options">
+                                    <!-- Money options will be added dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="best-deal-section" class="hidden">
+                        <div class="question" id="deal-question">Which is the best deal for Chocolate?</div>
+                        
+                        <div class="best-deal-container" id="deal-options">
+                            <!-- Deal options will be added dynamically -->
+                        </div>
                     </div>
                 </div>
                 
@@ -1024,7 +1100,11 @@
             questions: [],
             currentAnswer: null,
             timerInterval: null,
-            timeElapsed: 0
+            timeElapsed: 0,
+            moneyGameType: 0,
+            budget: 500,
+            cart: [],
+            selectedChange: []
         };
 
         // DOM Elements
@@ -1099,18 +1179,87 @@
             { name: 'Heart', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><path d="M30,55 L25,50 C10,35 5,30 5,20 C5,14 10,10 15,10 C20,10 25,14 30,20 C35,14 40,10 45,10 C50,10 55,14 55,20 C55,30 50,35 35,50 L30,55" fill="#F44336" /></svg>' }
         ];
 
-        const money = [
-            { type: 'coin', value: '₹1', name: 'One Rupee', class: 'coin-silver', display: '<div class="coin coin-silver">₹1</div>' },
-            { type: 'coin', value: '₹2', name: 'Two Rupee', class: 'coin-silver', display: '<div class="coin coin-silver">₹2</div>' },
-            { type: 'coin', value: '₹5', name: 'Five Rupee', class: 'coin-gold', display: '<div class="coin coin-gold">₹5</div>' },
-            { type: 'coin', value: '₹10', name: 'Ten Rupee', class: 'coin-gold', display: '<div class="coin coin-gold">₹10</div>' },
-            { type: 'bill', value: '₹10', name: 'Ten Rupee', class: 'bill-1', display: '<div class="bill bill-1">₹10</div>' },
-            { type: 'bill', value: '₹20', name: 'Twenty Rupee', class: 'bill-5', display: '<div class="bill bill-5">₹20</div>' },
-            { type: 'bill', value: '₹50', name: 'Fifty Rupee', class: 'bill-10', display: '<div class="bill bill-10">₹50</div>' },
-            { type: 'bill', value: '₹100', name: 'Hundred Rupee', class: 'bill-20', display: '<div class="bill bill-20">₹100</div>' },
-            { type: 'bill', value: '₹200', name: 'Two Hundred Rupee', class: 'bill-50', display: '<div class="bill bill-50">₹200</div>' },
-            { type: 'bill', value: '₹500', name: 'Five Hundred Rupee', class: 'bill-100', display: '<div class="bill bill-100">₹500</div>' },
-            { type: 'bill', value: '₹2000', name: 'Two Thousand Rupee', class: 'bill-2000', display: '<div class="bill bill-2000">₹2000</div>' }
+        const indianCurrency = [
+            { type: 'coin', value: '₹1', name: 'One Rupee Coin', class: 'coin-silver', display: '<div class="coin coin-silver">₹1</div>' },
+            { type: 'coin', value: '₹2', name: 'Two Rupee Coin', class: 'coin-silver', display: '<div class="coin coin-silver">₹2</div>' },
+            { type: 'coin', value: '₹5', name: 'Five Rupee Coin', class: 'coin-gold', display: '<div class="coin coin-gold">₹5</div>' },
+            { type: 'coin', value: '₹10', name: 'Ten Rupee Coin', class: 'coin-gold', display: '<div class="coin coin-gold">₹10</div>' },
+            { type: 'bill', value: '₹10', name: 'Ten Rupee Note', class: 'bill-10', display: '<div class="bill bill-10">₹10</div>' },
+            { type: 'bill', value: '₹20', name: 'Twenty Rupee Note', class: 'bill-20', display: '<div class="bill bill-20">₹20</div>' },
+            { type: 'bill', value: '₹50', name: 'Fifty Rupee Note', class: 'bill-50', display: '<div class="bill bill-50">₹50</div>' },
+            { type: 'bill', value: '₹100', name: 'Hundred Rupee Note', class: 'bill-100', display: '<div class="bill bill-100">₹100</div>' },
+            { type: 'bill', value: '₹200', name: 'Two Hundred Rupee Note', class: 'bill-200', display: '<div class="bill bill-200">₹200</div>' },
+            { type: 'bill', value: '₹500', name: 'Five Hundred Rupee Note', class: 'bill-500', display: '<div class="bill bill-500">₹500</div>' },
+            { type: 'bill', value: '₹2000', name: 'Two Thousand Rupee Note', class: 'bill-2000', display: '<div class="bill bill-2000">₹2000</div>' }
+        ];
+
+        const shopItems = [
+            { id: 1, name: 'Pencil', price: 5, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" fill="%23FFEB3B" /><polygon points="20,10 30,20 30,80 20,90" fill="%23FFC107" /><polygon points="80,10 70,20 70,80 80,90" fill="%23FFC107" /><polygon points="20,90 30,80 70,80 80,90" fill="%23795548" /><polygon points="20,10 30,20 70,20 80,10" fill="%23E91E63" /></svg>' },
+            { id: 2, name: 'Notebook', price: 25, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="%232196F3" /><rect x="20" y="20" width="60" height="60" fill="%23FFFFFF" /><line x1="20" y1="30" x2="80" y2="30" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="40" x2="80" y2="40" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="50" x2="80" y2="50" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="60" x2="80" y2="60" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="70" x2="80" y2="70" stroke="%2390CAF9" stroke-width="2" /></svg>' },
+            { id: 3, name: 'Eraser', price: 10, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" rx="5" ry="5" fill="%23F48FB1" /></svg>' },
+            { id: 4, name: 'Sharpener', price: 15, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="30,30 70,30 50,70" fill="%234CAF50" /></svg>' },
+            { id: 5, name: 'Water Bottle', price: 50, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M40,20 L60,20 L65,30 L65,80 Q65,90 55,90 L45,90 Q35,90 35,80 L35,30 Z" fill="%2390CAF9" /><path d="M40,20 L60,20 L58,10 L42,10 Z" fill="%232196F3" /></svg>' },
+            { id: 6, name: 'Lunch Box', price: 100, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" rx="5" ry="5" fill="%23FF9800" /><rect x="25" y="35" width="50" height="30" rx="2" ry="2" fill="%23FFCC80" /><circle cx="50" cy="25" r="5" fill="%23F57C00" /></svg>' },
+            { id: 7, name: 'Chocolates', price: 20, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" fill="%23795548" /><line x1="40" y1="30" x2="40" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="60" y1="30" x2="60" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="20" y1="50" x2="80" y2="50" stroke="%235D4037" stroke-width="2" /></svg>' },
+            { id: 8, name: 'Fruit Juice', price: 30, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M35,20 L65,20 L60,80 Q60,90 50,90 L50,90 Q40,90 40,80 Z" fill="%23FFEB3B" /><rect x="40" y="10" width="20" height="10" fill="%23FF9800" /><circle cx="42" cy="50" r="3" fill="%23FF9800" /><circle cx="58" cy="40" r="3" fill="%23FF9800" /><circle cx="50" cy="65" r="3" fill="%23FF9800" /></svg>' }
+        ];
+
+        const dealItems = [
+            {
+                id: 1,
+                name: "Chocolate",
+                options: [
+                    { quantity: "1 bar (50g)", price: 25, unitPrice: "₹50 per 100g" },
+                    { quantity: "3 bars (150g)", price: 60, unitPrice: "₹40 per 100g" },
+                    { quantity: "5 bars (250g)", price: 100, unitPrice: "₹40 per 100g" }
+                ],
+                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" fill="%23795548" /><line x1="40" y1="30" x2="40" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="60" y1="30" x2="60" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="20" y1="50" x2="80" y2="50" stroke="%235D4037" stroke-width="2" /></svg>',
+                bestDeal: 1  // Index of the best deal (0-based)
+            },
+            {
+                id: 2,
+                name: "Biscuits",
+                options: [
+                    { quantity: "1 pack (100g)", price: 20, unitPrice: "₹20 per 100g" },
+                    { quantity: "2 packs (200g)", price: 35, unitPrice: "₹17.5 per 100g" },
+                    { quantity: "Family pack (400g)", price: 60, unitPrice: "₹15 per 100g" }
+                ],
+                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="40" width="60" height="20" rx="5" ry="5" fill="%23FFD54F" /><rect x="25" y="45" width="5" height="5" fill="%23795548" /><rect x="35" y="45" width="5" height="5" fill="%23795548" /><rect x="45" y="45" width="5" height="5" fill="%23795548" /><rect x="55" y="45" width="5" height="5" fill="%23795548" /><rect x="65" y="45" width="5" height="5" fill="%23795548" /><rect x="70" y="50" width="5" height="5" fill="%23795548" /></svg>',
+                bestDeal: 2
+            },
+            {
+                id: 3,
+                name: "Pencils",
+                options: [
+                    { quantity: "2 pencils", price: 10, unitPrice: "₹5 per pencil" },
+                    { quantity: "5 pencils", price: 20, unitPrice: "₹4 per pencil" },
+                    { quantity: "10 pencils", price: 30, unitPrice: "₹3 per pencil" }
+                ],
+                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" fill="%23FFEB3B" /><polygon points="20,10 30,20 30,80 20,90" fill="%23FFC107" /><polygon points="80,10 70,20 70,80 80,90" fill="%23FFC107" /><polygon points="20,90 30,80 70,80 80,90" fill="%23795548" /><polygon points="20,10 30,20 70,20 80,10" fill="%23E91E63" /></svg>',
+                bestDeal: 2
+            },
+            {
+                id: 4,
+                name: "Juice",
+                options: [
+                    { quantity: "Small (200ml)", price: 25, unitPrice: "₹12.5 per 100ml" },
+                    { quantity: "Medium (500ml)", price: 45, unitPrice: "₹9 per 100ml" },
+                    { quantity: "Large (1 liter)", price: 80, unitPrice: "₹8 per 100ml" }
+                ],
+                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M35,20 L65,20 L60,80 Q60,90 50,90 L50,90 Q40,90 40,80 Z" fill="%23FFEB3B" /><rect x="40" y="10" width="20" height="10" fill="%23FF9800" /><circle cx="42" cy="50" r="3" fill="%23FF9800" /><circle cx="58" cy="40" r="3" fill="%23FF9800" /><circle cx="50" cy="65" r="3" fill="%23FF9800" /></svg>',
+                bestDeal: 2
+            },
+            {
+                id: 5,
+                name: "Chips",
+                options: [
+                    { quantity: "Small (30g)", price: 10, unitPrice: "₹33.3 per 100g" },
+                    { quantity: "Medium (50g)", price: 15, unitPrice: "₹30 per 100g" },
+                    { quantity: "Large (100g)", price: 25, unitPrice: "₹25 per 100g" }
+                ],
+                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,30 Q50,10 70,30 L70,70 Q50,90 30,70 Z" fill="%23FFC107" /><path d="M40,40 Q50,30 60,40" stroke="%23FF9800" stroke-width="2" fill="none" /><path d="M40,50 Q50,40 60,50" stroke="%23FF9800" stroke-width="2" fill="none" /><path d="M40,60 Q50,50 60,60" stroke="%23FF9800" stroke-width="2" fill="none" /></svg>',
+                bestDeal: 2
+            }
         ];
 
         // Helper Functions
