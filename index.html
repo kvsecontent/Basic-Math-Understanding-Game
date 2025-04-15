@@ -676,6 +676,10 @@
         .bill-100 {
             background: linear-gradient(135deg, #e1bee7, #d1c4e9);
         }
+        
+        .bill-2000 {
+            background: linear-gradient(135deg, #ffcdd2, #f8bbd0);
+        }
 
         .hidden {
             display: none;
@@ -820,7 +824,7 @@
     <div class="container">
         <div class="header">
             <h1>Advanced Math Adventure</h1>
-            <p>Solve math challenges and learn new concepts!</p>
+            <p>Solve math challenges and learn Indian currency!</p>
         </div>
         
         <!-- Login Screen -->
@@ -875,8 +879,8 @@
                 </div>
                 <div class="game-card" data-game="money">
                     <div class="game-icon">💰</div>
-                    <h3>Money</h3>
-                    <p>Learn to identify coins and bills</p>
+                    <h3>Indian Currency</h3>
+                    <p>Learn to identify Indian Rupee coins and notes</p>
                 </div>
             </div>
         </div>
@@ -1096,18 +1100,17 @@
         ];
 
         const money = [
-            { type: 'coin', value: '1¢', name: 'Penny', class: 'coin-bronze', display: '<div class="coin coin-bronze">1¢</div>' },
-            { type: 'coin', value: '5¢', name: 'Nickel', class: 'coin-silver', display: '<div class="coin coin-silver">5¢</div>' },
-            { type: 'coin', value: '10¢', name: 'Dime', class: 'coin-silver', display: '<div class="coin coin-silver">10¢</div>' },
-            { type: 'coin', value: '25¢', name: 'Quarter', class: 'coin-silver', display: '<div class="coin coin-silver">25¢</div>' },
-            { type: 'coin', value: '50¢', name: 'Half Dollar', class: 'coin-silver', display: '<div class="coin coin-silver">50¢</div>' },
-            { type: 'coin', value: '$1', name: 'Dollar Coin', class: 'coin-gold', display: '<div class="coin coin-gold">$1</div>' },
-            { type: 'bill', value: '$1', name: 'One Dollar', class: 'bill-1', display: '<div class="bill bill-1">$1</div>' },
-            { type: 'bill', value: '$5', name: 'Five Dollar', class: 'bill-5', display: '<div class="bill bill-5">$5</div>' },
-            { type: 'bill', value: '$10', name: 'Ten Dollar', class: 'bill-10', display: '<div class="bill bill-10">$10</div>' },
-            { type: 'bill', value: '$20', name: 'Twenty Dollar', class: 'bill-20', display: '<div class="bill bill-20">$20</div>' },
-            { type: 'bill', value: '$50', name: 'Fifty Dollar', class: 'bill-50', display: '<div class="bill bill-50">$50</div>' },
-            { type: 'bill', value: '$100', name: 'Hundred Dollar', class: 'bill-100', display: '<div class="bill bill-100">$100</div>' }
+            { type: 'coin', value: '₹1', name: 'One Rupee', class: 'coin-silver', display: '<div class="coin coin-silver">₹1</div>' },
+            { type: 'coin', value: '₹2', name: 'Two Rupee', class: 'coin-silver', display: '<div class="coin coin-silver">₹2</div>' },
+            { type: 'coin', value: '₹5', name: 'Five Rupee', class: 'coin-gold', display: '<div class="coin coin-gold">₹5</div>' },
+            { type: 'coin', value: '₹10', name: 'Ten Rupee', class: 'coin-gold', display: '<div class="coin coin-gold">₹10</div>' },
+            { type: 'bill', value: '₹10', name: 'Ten Rupee', class: 'bill-1', display: '<div class="bill bill-1">₹10</div>' },
+            { type: 'bill', value: '₹20', name: 'Twenty Rupee', class: 'bill-5', display: '<div class="bill bill-5">₹20</div>' },
+            { type: 'bill', value: '₹50', name: 'Fifty Rupee', class: 'bill-10', display: '<div class="bill bill-10">₹50</div>' },
+            { type: 'bill', value: '₹100', name: 'Hundred Rupee', class: 'bill-20', display: '<div class="bill bill-20">₹100</div>' },
+            { type: 'bill', value: '₹200', name: 'Two Hundred Rupee', class: 'bill-50', display: '<div class="bill bill-50">₹200</div>' },
+            { type: 'bill', value: '₹500', name: 'Five Hundred Rupee', class: 'bill-100', display: '<div class="bill bill-100">₹500</div>' },
+            { type: 'bill', value: '₹2000', name: 'Two Thousand Rupee', class: 'bill-2000', display: '<div class="bill bill-2000">₹2000</div>' }
         ];
 
         // Helper Functions
@@ -1509,8 +1512,8 @@
         }
         
         function initMoneyGame() {
-            gameTitle.textContent = 'Money';
-            gameDescription.textContent = 'Identify the values of coins and bills.';
+            gameTitle.textContent = 'Indian Currency';
+            gameDescription.textContent = 'Identify the values of Indian Rupee coins and notes.';
             
             // Generate questions
             gameState.questions = generateMoneyQuestions();
