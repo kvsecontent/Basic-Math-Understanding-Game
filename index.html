@@ -386,16 +386,19 @@
             text-align: center;
             padding: 10px;
             border-radius: 10px;
+            display: none;
         }
 
         .feedback.correct {
             background-color: rgba(0, 200, 83, 0.2);
             color: var(--correct-color);
+            display: block;
         }
 
         .feedback.incorrect {
             background-color: rgba(255, 23, 68, 0.2);
             color: var(--incorrect-color);
+            display: block;
         }
 
         /* Result Styles */
@@ -875,9 +878,9 @@
                     <p>Identify different shapes</p>
                 </div>
                 <div class="game-card" data-game="money">
-                    <div class="game-icon">💰</div>
-                    <h3>Indian Currency</h3>
-                    <p>Learn to use money in real-world situations</p>
+                    <div class="game-icon">₹</div>
+                    <h3>Money Math</h3>
+                    <p>Solve financial problems with Indian Rupees</p>
                 </div>
             </div>
         </div>
@@ -976,88 +979,12 @@
                 
                 <!-- Money Game -->
                 <div id="money-game" class="question-container hidden">
-                    <div id="currency-identification" class="hidden">
-                    <div class="question" id="currency-question">What is the value of this Indian currency?</div>
-                    <div class="money-container" id="currency-display" style="min-height: 150px; display: flex; justify-content: center; align-items: center; margin: 30px 0;">
-                        <!-- Currency item will be added dynamically -->
+                    <div class="question" id="money-question">Solve this financial problem:</div>
+                    <div class="money-container" id="money-display">
+                        <!-- Money problem visuals will be added dynamically -->
                     </div>
-                    <div class="options-container" id="currency-options">
+                    <div class="options-container" id="money-options">
                         <!-- Options will be added dynamically -->
-                    </div>
-                </div>
-                    
-                    <div id="shopping-section" class="hidden">
-                        <div class="question" id="shopping-question">Buy items within your budget of ₹500!</div>
-                        
-                        <div class="shop-container">
-                            <div class="wallet">
-                                <div class="wallet-header">
-                                    <span>Your Budget: </span>
-                                    <span id="budget-amount">₹500</span>
-                                </div>
-                                <div class="budget-bar">
-                                    <div id="budget-progress" class="budget-progress"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="shop-items" id="shop-items">
-                                <!-- Shop items will be added dynamically -->
-                            </div>
-                            
-                            <div class="cart">
-                                <div class="cart-header">
-                                    <span>Your Shopping Cart</span>
-                                    <span id="cart-count">(0 items)</span>
-                                </div>
-                                <div class="cart-items" id="cart-items">
-                                    <!-- Cart items will be added dynamically -->
-                                    <div id="empty-cart-message">Your cart is empty. Start shopping!</div>
-                                </div>
-                                <div class="cart-total">
-                                    <span>Total:</span>
-                                    <span id="cart-total">₹0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="change-section" class="hidden">
-                        <div class="question" id="change-question">Make the correct change!</div>
-                        
-                        <div class="change-container">
-                            <div class="transaction-details">
-                                <div class="transaction-item">
-                                    <span>Purchase Amount:</span>
-                                    <span id="purchase-amount">₹65</span>
-                                </div>
-                                <div class="transaction-item">
-                                    <span>Customer Paid:</span>
-                                    <span id="customer-paid">₹100</span>
-                                </div>
-                                <div class="transaction-item">
-                                    <span>Change Due:</span>
-                                    <span id="change-due">₹35</span>
-                                </div>
-                            </div>
-                            
-                            <div class="change-workspace">
-                                <div class="change-header">Select coins and notes to make the change:</div>
-                                <div class="change-money" id="selected-change">
-                                    <!-- Selected change will appear here -->
-                                </div>
-                                <div class="money-options" id="change-options">
-                                    <!-- Money options will be added dynamically -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="best-deal-section" class="hidden">
-                        <div class="question" id="deal-question">Which is the best deal for Chocolate?</div>
-                        
-                        <div class="best-deal-container" id="deal-options">
-                            <!-- Deal options will be added dynamically -->
-                        </div>
                     </div>
                 </div>
                 
@@ -1097,11 +1024,7 @@
             questions: [],
             currentAnswer: null,
             timerInterval: null,
-            timeElapsed: 0,
-            moneyGameType: 0,
-            budget: 500,
-            cart: [],
-            selectedChange: []
+            timeElapsed: 0
         };
 
         // DOM Elements
@@ -1176,87 +1099,18 @@
             { name: 'Heart', svg: '<svg width="60" height="60" viewBox="0 0 60 60"><path d="M30,55 L25,50 C10,35 5,30 5,20 C5,14 10,10 15,10 C20,10 25,14 30,20 C35,14 40,10 45,10 C50,10 55,14 55,20 C55,30 50,35 35,50 L30,55" fill="#F44336" /></svg>' }
         ];
 
-        const indianCurrency = [
-            { type: 'coin', value: '₹1', name: 'One Rupee Coin', class: 'coin-silver', display: '<div class="coin coin-silver">₹1</div>' },
-            { type: 'coin', value: '₹2', name: 'Two Rupee Coin', class: 'coin-silver', display: '<div class="coin coin-silver">₹2</div>' },
-            { type: 'coin', value: '₹5', name: 'Five Rupee Coin', class: 'coin-gold', display: '<div class="coin coin-gold">₹5</div>' },
-            { type: 'coin', value: '₹10', name: 'Ten Rupee Coin', class: 'coin-gold', display: '<div class="coin coin-gold">₹10</div>' },
-            { type: 'bill', value: '₹10', name: 'Ten Rupee Note', class: 'bill-10', display: '<div class="bill bill-10">₹10</div>' },
-            { type: 'bill', value: '₹20', name: 'Twenty Rupee Note', class: 'bill-20', display: '<div class="bill bill-20">₹20</div>' },
-            { type: 'bill', value: '₹50', name: 'Fifty Rupee Note', class: 'bill-50', display: '<div class="bill bill-50">₹50</div>' },
-            { type: 'bill', value: '₹100', name: 'Hundred Rupee Note', class: 'bill-100', display: '<div class="bill bill-100">₹100</div>' },
-            { type: 'bill', value: '₹200', name: 'Two Hundred Rupee Note', class: 'bill-200', display: '<div class="bill bill-200">₹200</div>' },
-            { type: 'bill', value: '₹500', name: 'Five Hundred Rupee Note', class: 'bill-500', display: '<div class="bill bill-500">₹500</div>' },
-            { type: 'bill', value: '₹2000', name: 'Two Thousand Rupee Note', class: 'bill-2000', display: '<div class="bill bill-2000">₹2000</div>' }
-        ];
-
-        const shopItems = [
-            { id: 1, name: 'Pencil', price: 5, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" fill="%23FFEB3B" /><polygon points="20,10 30,20 30,80 20,90" fill="%23FFC107" /><polygon points="80,10 70,20 70,80 80,90" fill="%23FFC107" /><polygon points="20,90 30,80 70,80 80,90" fill="%23795548" /><polygon points="20,10 30,20 70,20 80,10" fill="%23E91E63" /></svg>' },
-            { id: 2, name: 'Notebook', price: 25, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="%232196F3" /><rect x="20" y="20" width="60" height="60" fill="%23FFFFFF" /><line x1="20" y1="30" x2="80" y2="30" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="40" x2="80" y2="40" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="50" x2="80" y2="50" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="60" x2="80" y2="60" stroke="%2390CAF9" stroke-width="2" /><line x1="20" y1="70" x2="80" y2="70" stroke="%2390CAF9" stroke-width="2" /></svg>' },
-            { id: 3, name: 'Eraser', price: 10, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" rx="5" ry="5" fill="%23F48FB1" /></svg>' },
-            { id: 4, name: 'Sharpener', price: 15, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="30,30 70,30 50,70" fill="%234CAF50" /></svg>' },
-            { id: 5, name: 'Water Bottle', price: 50, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M40,20 L60,20 L65,30 L65,80 Q65,90 55,90 L45,90 Q35,90 35,80 L35,30 Z" fill="%2390CAF9" /><path d="M40,20 L60,20 L58,10 L42,10 Z" fill="%232196F3" /></svg>' },
-            { id: 6, name: 'Lunch Box', price: 100, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" rx="5" ry="5" fill="%23FF9800" /><rect x="25" y="35" width="50" height="30" rx="2" ry="2" fill="%23FFCC80" /><circle cx="50" cy="25" r="5" fill="%23F57C00" /></svg>' },
-            { id: 7, name: 'Chocolates', price: 20, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" fill="%23795548" /><line x1="40" y1="30" x2="40" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="60" y1="30" x2="60" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="20" y1="50" x2="80" y2="50" stroke="%235D4037" stroke-width="2" /></svg>' },
-            { id: 8, name: 'Fruit Juice', price: 30, image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M35,20 L65,20 L60,80 Q60,90 50,90 L50,90 Q40,90 40,80 Z" fill="%23FFEB3B" /><rect x="40" y="10" width="20" height="10" fill="%23FF9800" /><circle cx="42" cy="50" r="3" fill="%23FF9800" /><circle cx="58" cy="40" r="3" fill="%23FF9800" /><circle cx="50" cy="65" r="3" fill="%23FF9800" /></svg>' }
-        ];
-
-        const dealItems = [
-            {
-                id: 1,
-                name: "Chocolate",
-                options: [
-                    { quantity: "1 bar (50g)", price: 25, unitPrice: "₹50 per 100g" },
-                    { quantity: "3 bars (150g)", price: 60, unitPrice: "₹40 per 100g" },
-                    { quantity: "5 bars (250g)", price: 100, unitPrice: "₹40 per 100g" }
-                ],
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="40" fill="%23795548" /><line x1="40" y1="30" x2="40" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="60" y1="30" x2="60" y2="70" stroke="%235D4037" stroke-width="2" /><line x1="20" y1="50" x2="80" y2="50" stroke="%235D4037" stroke-width="2" /></svg>',
-                bestDeal: 1  // Index of the best deal (0-based)
-            },
-            {
-                id: 2,
-                name: "Biscuits",
-                options: [
-                    { quantity: "1 pack (100g)", price: 20, unitPrice: "₹20 per 100g" },
-                    { quantity: "2 packs (200g)", price: 35, unitPrice: "₹17.5 per 100g" },
-                    { quantity: "Family pack (400g)", price: 60, unitPrice: "₹15 per 100g" }
-                ],
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="40" width="60" height="20" rx="5" ry="5" fill="%23FFD54F" /><rect x="25" y="45" width="5" height="5" fill="%23795548" /><rect x="35" y="45" width="5" height="5" fill="%23795548" /><rect x="45" y="45" width="5" height="5" fill="%23795548" /><rect x="55" y="45" width="5" height="5" fill="%23795548" /><rect x="65" y="45" width="5" height="5" fill="%23795548" /><rect x="70" y="50" width="5" height="5" fill="%23795548" /></svg>',
-                bestDeal: 2
-            },
-            {
-                id: 3,
-                name: "Pencils",
-                options: [
-                    { quantity: "2 pencils", price: 10, unitPrice: "₹5 per pencil" },
-                    { quantity: "5 pencils", price: 20, unitPrice: "₹4 per pencil" },
-                    { quantity: "10 pencils", price: 30, unitPrice: "₹3 per pencil" }
-                ],
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" fill="%23FFEB3B" /><polygon points="20,10 30,20 30,80 20,90" fill="%23FFC107" /><polygon points="80,10 70,20 70,80 80,90" fill="%23FFC107" /><polygon points="20,90 30,80 70,80 80,90" fill="%23795548" /><polygon points="20,10 30,20 70,20 80,10" fill="%23E91E63" /></svg>',
-                bestDeal: 2
-            },
-            {
-                id: 4,
-                name: "Juice",
-                options: [
-                    { quantity: "Small (200ml)", price: 25, unitPrice: "₹12.5 per 100ml" },
-                    { quantity: "Medium (500ml)", price: 45, unitPrice: "₹9 per 100ml" },
-                    { quantity: "Large (1 liter)", price: 80, unitPrice: "₹8 per 100ml" }
-                ],
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M35,20 L65,20 L60,80 Q60,90 50,90 L50,90 Q40,90 40,80 Z" fill="%23FFEB3B" /><rect x="40" y="10" width="20" height="10" fill="%23FF9800" /><circle cx="42" cy="50" r="3" fill="%23FF9800" /><circle cx="58" cy="40" r="3" fill="%23FF9800" /><circle cx="50" cy="65" r="3" fill="%23FF9800" /></svg>',
-                bestDeal: 2
-            },
-            {
-                id: 5,
-                name: "Chips",
-                options: [
-                    { quantity: "Small (30g)", price: 10, unitPrice: "₹33.3 per 100g" },
-                    { quantity: "Medium (50g)", price: 15, unitPrice: "₹30 per 100g" },
-                    { quantity: "Large (100g)", price: 25, unitPrice: "₹25 per 100g" }
-                ],
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,30 Q50,10 70,30 L70,70 Q50,90 30,70 Z" fill="%23FFC107" /><path d="M40,40 Q50,30 60,40" stroke="%23FF9800" stroke-width="2" fill="none" /><path d="M40,50 Q50,40 60,50" stroke="%23FF9800" stroke-width="2" fill="none" /><path d="M40,60 Q50,50 60,60" stroke="%23FF9800" stroke-width="2" fill="none" /></svg>',
-                bestDeal: 2
-            }
+        const money = [
+            { type: 'coin', value: '₹1', name: 'One Rupee', class: 'coin-silver', display: '<div class="coin coin-silver">₹1</div>' },
+            { type: 'coin', value: '₹2', name: 'Two Rupee', class: 'coin-silver', display: '<div class="coin coin-silver">₹2</div>' },
+            { type: 'coin', value: '₹5', name: 'Five Rupee', class: 'coin-gold', display: '<div class="coin coin-gold">₹5</div>' },
+            { type: 'coin', value: '₹10', name: 'Ten Rupee', class: 'coin-gold', display: '<div class="coin coin-gold">₹10</div>' },
+            { type: 'bill', value: '₹10', name: 'Ten Rupee', class: 'bill-1', display: '<div class="bill bill-1">₹10</div>' },
+            { type: 'bill', value: '₹20', name: 'Twenty Rupee', class: 'bill-5', display: '<div class="bill bill-5">₹20</div>' },
+            { type: 'bill', value: '₹50', name: 'Fifty Rupee', class: 'bill-10', display: '<div class="bill bill-10">₹50</div>' },
+            { type: 'bill', value: '₹100', name: 'Hundred Rupee', class: 'bill-20', display: '<div class="bill bill-20">₹100</div>' },
+            { type: 'bill', value: '₹200', name: 'Two Hundred Rupee', class: 'bill-50', display: '<div class="bill bill-50">₹200</div>' },
+            { type: 'bill', value: '₹500', name: 'Five Hundred Rupee', class: 'bill-100', display: '<div class="bill bill-100">₹500</div>' },
+            { type: 'bill', value: '₹2000', name: 'Two Thousand Rupee', class: 'bill-2000', display: '<div class="bill bill-2000">₹2000</div>' }
         ];
 
         // Helper Functions
@@ -1554,28 +1408,144 @@
         function generateMoneyQuestions() {
             const questions = [];
             
-            // Ensure each money item appears at least once
-            const shuffledMoney = shuffle([...money]);
+            // Financial problem types
+            const problemTypes = [
+                'profit',
+                'loss',
+                'discount',
+                'change',
+                'budget',
+                'bestValue'
+            ];
             
             for (let i = 0; i < gameState.totalQuestions; i++) {
-                const moneyIndex = i % money.length;
-                const correctMoney = shuffledMoney[moneyIndex];
+                const problemType = problemTypes[i % problemTypes.length];
+                let question;
                 
-                // Generate options
-                let options;
-                if (correctMoney.type === 'coin') {
-                    const coins = money.filter(item => item.type === 'coin');
-                    options = shuffle([correctMoney.value, ...coins.filter(coin => coin.value !== correctMoney.value).map(coin => coin.value).slice(0, 3)]);
-                } else {
-                    const bills = money.filter(item => item.type === 'bill');
-                    options = shuffle([correctMoney.value, ...bills.filter(bill => bill.value !== correctMoney.value).map(bill => bill.value).slice(0, 3)]);
+                switch(problemType) {
+                    case 'profit':
+                        const costPrice = getRandomNumber(20, 100) * 5; // Make it divisible by 5
+                        const sellingPrice = costPrice + getRandomNumber(5, 20) * 5;
+                        const profit = sellingPrice - costPrice;
+                        
+                        question = {
+                            type: 'profit',
+                            text: `You bought a toy for ₹${costPrice} and sold it for ₹${sellingPrice}. What is your profit?`,
+                            correctAnswer: `₹${profit}`,
+                            options: shuffle([
+                                `₹${profit}`,
+                                `₹${profit + 10}`,
+                                `₹${profit - 10}`,
+                                `₹${profit * 2}`
+                            ])
+                        };
+                        break;
+                    
+                    case 'loss':
+                        const originalPrice = getRandomNumber(50, 200) * 5;
+                        const soldPrice = originalPrice - getRandomNumber(5, 20) * 5;
+                        const loss = originalPrice - soldPrice;
+                        
+                        question = {
+                            type: 'loss',
+                            text: `You bought a book for ₹${originalPrice} and had to sell it for ₹${soldPrice}. What was your loss?`,
+                            correctAnswer: `₹${loss}`,
+                            options: shuffle([
+                                `₹${loss}`,
+                                `₹${loss + 15}`,
+                                `₹${loss - 15}`,
+                                `₹${Math.round(loss / 2)}`
+                            ])
+                        };
+                        break;
+                    
+                    case 'discount':
+                        const itemPrice = getRandomNumber(100, 500) * 10;
+                        const discountPercent = [10, 15, 20, 25, 50][getRandomNumber(0, 4)];
+                        const discountAmount = (itemPrice * discountPercent) / 100;
+                        const finalPrice = itemPrice - discountAmount;
+                        
+                        question = {
+                            type: 'discount',
+                            text: `A shirt costs ₹${itemPrice}. There is a ${discountPercent}% discount. What is the final price?`,
+                            correctAnswer: `₹${finalPrice}`,
+                            options: shuffle([
+                                `₹${finalPrice}`,
+                                `₹${finalPrice + 50}`,
+                                `₹${finalPrice - 50}`,
+                                `₹${itemPrice - 100}`
+                            ])
+                        };
+                        break;
+                    
+                    case 'change':
+                        const purchaseAmount = getRandomNumber(10, 90) * 5;
+                        const paymentAmount = [100, 200, 500][getRandomNumber(0, 2)];
+                        const changeAmount = paymentAmount - purchaseAmount;
+                        
+                        question = {
+                            type: 'change',
+                            text: `You buy an item for ₹${purchaseAmount} and pay with a ₹${paymentAmount} note. How much change should you get?`,
+                            correctAnswer: `₹${changeAmount}`,
+                            options: shuffle([
+                                `₹${changeAmount}`,
+                                `₹${changeAmount + 20}`,
+                                `₹${changeAmount - 20}`,
+                                `₹${purchaseAmount}`
+                            ])
+                        };
+                        break;
+                    
+                    case 'budget':
+                        const budget = getRandomNumber(100, 500);
+                        const item1 = getRandomNumber(20, 100);
+                        const item2 = getRandomNumber(20, 100);
+                        const item3 = getRandomNumber(20, 100);
+                        const totalCost = item1 + item2 + item3;
+                        const remaining = budget - totalCost;
+                        const canAfford = remaining >= 0;
+                        
+                        question = {
+                            type: 'budget',
+                            text: `You have ₹${budget}. You want to buy items costing ₹${item1}, ₹${item2}, and ₹${item3}. How much money will you have left?`,
+                            correctAnswer: canAfford ? `₹${remaining}` : 'Not enough money',
+                            options: shuffle([
+                                canAfford ? `₹${remaining}` : 'Not enough money',
+                                canAfford ? `₹${remaining + 50}` : `₹${50 - Math.abs(remaining)}`,
+                                canAfford ? `₹${remaining - 50}` : `₹${Math.abs(remaining)}`,
+                                canAfford ? `₹${budget}` : `₹${totalCost - budget}`
+                            ])
+                        };
+                        break;
+                    
+                    case 'bestValue':
+                        const product1Quantity = getRandomNumber(100, 500);
+                        const product1Price = getRandomNumber(20, 100);
+                        const product1Value = product1Price / product1Quantity;
+                        
+                        const product2Quantity = getRandomNumber(100, 500);
+                        const product2Price = getRandomNumber(20, 100);
+                        const product2Value = product2Price / product2Quantity;
+                        
+                        const betterDeal = product1Value < product2Value ? 
+                            `${product1Quantity}g for ₹${product1Price}` : 
+                            `${product2Quantity}g for ₹${product2Price}`;
+                        
+                        question = {
+                            type: 'bestValue',
+                            text: `Which is the better deal: ${product1Quantity}g of rice for ₹${product1Price} or ${product2Quantity}g of rice for ₹${product2Price}?`,
+                            correctAnswer: betterDeal,
+                            options: shuffle([
+                                `${product1Quantity}g for ₹${product1Price}`,
+                                `${product2Quantity}g for ₹${product2Price}`,
+                                'Both are equal value',
+                                'Cannot determine'
+                            ])
+                        };
+                        break;
                 }
                 
-                questions.push({
-                    money: correctMoney,
-                    correctAnswer: correctMoney.value,
-                    options
-                });
+                questions.push(question);
             }
             
             return questions;
@@ -1658,8 +1628,8 @@
         }
         
         function initMoneyGame() {
-            gameTitle.textContent = 'Indian Currency';
-            gameDescription.textContent = 'Identify the values of Indian Rupee coins and notes.';
+            gameTitle.textContent = 'Money Math';
+            gameDescription.textContent = 'Solve real-world financial problems using Indian Rupees.';
             
             // Generate questions
             gameState.questions = generateMoneyQuestions();
@@ -1884,24 +1854,213 @@
             
             const question = gameState.questions[gameState.questionIndex];
             
-            // Display the money item
-            moneyDisplay.innerHTML = question.money.display;
+            // Update question text
+            moneyQuestion.textContent = question.text;
+            
+            // Clear previous display
+            moneyDisplay.innerHTML = '';
+            
+            // Create visual representation based on question type
+            if (question.type === 'profit' || question.type === 'loss') {
+                const profitLossVisual = document.createElement('div');
+                profitLossVisual.style.display = 'flex';
+                profitLossVisual.style.alignItems = 'center';
+                profitLossVisual.style.justifyContent = 'center';
+                profitLossVisual.style.gap = '20px';
+                profitLossVisual.style.marginBottom = '20px';
+                
+                const buyPriceDisplay = document.createElement('div');
+                buyPriceDisplay.className = 'bill';
+                buyPriceDisplay.style.display = 'flex';
+                buyPriceDisplay.style.flexDirection = 'column';
+                buyPriceDisplay.style.alignItems = 'center';
+                buyPriceDisplay.style.padding = '15px';
+                buyPriceDisplay.innerHTML = `<strong>Buy Price</strong><br>${question.type === 'profit' ? question.text.match(/₹(\d+) and sold/)[1] : question.text.match(/₹(\d+) and had/)[1]}`;
+                
+                const arrowDisplay = document.createElement('div');
+                arrowDisplay.style.fontSize = '2rem';
+                arrowDisplay.textContent = '→';
+                
+                const sellPriceDisplay = document.createElement('div');
+                sellPriceDisplay.className = 'bill';
+                sellPriceDisplay.style.display = 'flex';
+                sellPriceDisplay.style.flexDirection = 'column';
+                sellPriceDisplay.style.alignItems = 'center';
+                sellPriceDisplay.style.padding = '15px';
+                sellPriceDisplay.innerHTML = `<strong>Sell Price</strong><br>${question.type === 'profit' ? question.text.match(/it for ₹(\d+)/)[1] : question.text.match(/it for ₹(\d+)/)[1]}`;
+                
+                profitLossVisual.appendChild(buyPriceDisplay);
+                profitLossVisual.appendChild(arrowDisplay);
+                profitLossVisual.appendChild(sellPriceDisplay);
+                
+                moneyDisplay.appendChild(profitLossVisual);
+            } else if (question.type === 'discount') {
+                const discountVisual = document.createElement('div');
+                discountVisual.style.display = 'flex';
+                discountVisual.style.alignItems = 'center';
+                discountVisual.style.justifyContent = 'center';
+                discountVisual.style.gap = '20px';
+                discountVisual.style.marginBottom = '20px';
+                
+                const originalPriceDisplay = document.createElement('div');
+                originalPriceDisplay.className = 'bill bill-100';
+                originalPriceDisplay.style.display = 'flex';
+                originalPriceDisplay.style.flexDirection = 'column';
+                originalPriceDisplay.style.alignItems = 'center';
+                originalPriceDisplay.style.padding = '15px';
+                originalPriceDisplay.innerHTML = `<strong>Original Price</strong><br>${question.text.match(/costs ₹(\d+)/)[1]}`;
+                
+                const discountDisplay = document.createElement('div');
+                discountDisplay.style.fontSize = '2rem';
+                discountDisplay.style.color = 'red';
+                discountDisplay.style.fontWeight = 'bold';
+                discountDisplay.style.padding = '10px 20px';
+                discountDisplay.style.border = '2px dashed red';
+                discountDisplay.style.borderRadius = '50%';
+                discountDisplay.textContent = `${question.text.match(/(\d+)% discount/)[1]}%`;
+                
+                discountVisual.appendChild(originalPriceDisplay);
+                discountVisual.appendChild(discountDisplay);
+                
+                moneyDisplay.appendChild(discountVisual);
+            } else if (question.type === 'change') {
+                const changeVisual = document.createElement('div');
+                changeVisual.style.display = 'flex';
+                changeVisual.style.alignItems = 'center';
+                changeVisual.style.justifyContent = 'center';
+                changeVisual.style.gap = '20px';
+                changeVisual.style.marginBottom = '20px';
+                
+                const purchaseAmount = question.text.match(/₹(\d+) and pay/)[1];
+                const paymentAmount = question.text.match(/a ₹(\d+) note/)[1];
+                
+                const itemDisplay = document.createElement('div');
+                itemDisplay.className = 'bill bill-5';
+                itemDisplay.style.display = 'flex';
+                itemDisplay.style.flexDirection = 'column';
+                itemDisplay.style.alignItems = 'center';
+                itemDisplay.style.padding = '15px';
+                itemDisplay.innerHTML = `<strong>Item</strong><br>₹${purchaseAmount}`;
+                
+                const noteDisplay = document.createElement('div');
+                noteDisplay.className = 'bill bill-50';
+                noteDisplay.style.display = 'flex';
+                noteDisplay.style.flexDirection = 'column';
+                noteDisplay.style.alignItems = 'center';
+                noteDisplay.style.padding = '15px';
+                noteDisplay.innerHTML = `<strong>Payment</strong><br>₹${paymentAmount}`;
+                
+                const questionDisplay = document.createElement('div');
+                questionDisplay.style.fontSize = '2rem';
+                questionDisplay.style.backgroundColor = '#f5f5f5';
+                questionDisplay.style.padding = '10px 20px';
+                questionDisplay.style.borderRadius = '50%';
+                questionDisplay.textContent = '?';
+                
+                changeVisual.appendChild(itemDisplay);
+                changeVisual.appendChild(noteDisplay);
+                changeVisual.appendChild(questionDisplay);
+                
+                moneyDisplay.appendChild(changeVisual);
+            } else if (question.type === 'budget') {
+                const budgetVisual = document.createElement('div');
+                budgetVisual.style.display = 'flex';
+                budgetVisual.style.flexDirection = 'column';
+                budgetVisual.style.alignItems = 'center';
+                budgetVisual.style.gap = '20px';
+                budgetVisual.style.marginBottom = '20px';
+                
+                const budget = question.text.match(/have ₹(\d+)/)[1];
+                const prices = question.text.match(/₹(\d+), ₹(\d+), and ₹(\d+)/);
+                
+                const walletDisplay = document.createElement('div');
+                walletDisplay.className = 'bill bill-100';
+                walletDisplay.style.display = 'flex';
+                walletDisplay.style.flexDirection = 'column';
+                walletDisplay.style.alignItems = 'center';
+                walletDisplay.style.padding = '15px';
+                walletDisplay.style.width = '200px';
+                walletDisplay.innerHTML = `<strong>Your Money</strong><br>₹${budget}`;
+                
+                const itemsDisplay = document.createElement('div');
+                itemsDisplay.style.display = 'flex';
+                itemsDisplay.style.gap = '10px';
+                itemsDisplay.style.flexWrap = 'wrap';
+                itemsDisplay.style.justifyContent = 'center';
+                
+                for (let i = 1; i <= 3; i++) {
+                    const itemDisplay = document.createElement('div');
+                    itemDisplay.className = 'bill';
+                    itemDisplay.style.display = 'flex';
+                    itemDisplay.style.flexDirection = 'column';
+                    itemDisplay.style.alignItems = 'center';
+                    itemDisplay.style.padding = '15px';
+                    itemDisplay.style.width = '120px';
+                    itemDisplay.innerHTML = `<strong>Item ${i}</strong><br>₹${prices[i]}`;
+                    itemsDisplay.appendChild(itemDisplay);
+                }
+                
+                budgetVisual.appendChild(walletDisplay);
+                budgetVisual.appendChild(itemsDisplay);
+                
+                moneyDisplay.appendChild(budgetVisual);
+            } else if (question.type === 'bestValue') {
+                const bestValueVisual = document.createElement('div');
+                bestValueVisual.style.display = 'flex';
+                bestValueVisual.style.alignItems = 'center';
+                bestValueVisual.style.justifyContent = 'center';
+                bestValueVisual.style.gap = '40px';
+                bestValueVisual.style.marginBottom = '20px';
+                
+                const matches = question.text.match(/(\d+)g .+ ₹(\d+) or (\d+)g .+ ₹(\d+)/);
+                const product1 = { quantity: matches[1], price: matches[2] };
+                const product2 = { quantity: matches[3], price: matches[4] };
+                
+                const product1Display = document.createElement('div');
+                product1Display.className = 'bill bill-5';
+                product1Display.style.display = 'flex';
+                product1Display.style.flexDirection = 'column';
+                product1Display.style.alignItems = 'center';
+                product1Display.style.padding = '15px';
+                product1Display.style.width = '150px';
+                product1Display.innerHTML = `<strong>Option A</strong><br>${product1.quantity}g<br>₹${product1.price}`;
+                
+                const vsDisplay = document.createElement('div');
+                vsDisplay.style.fontSize = '2rem';
+                vsDisplay.style.fontWeight = 'bold';
+                vsDisplay.textContent = 'VS';
+                
+                const product2Display = document.createElement('div');
+                product2Display.className = 'bill bill-10';
+                product2Display.style.display = 'flex';
+                product2Display.style.flexDirection = 'column';
+                product2Display.style.alignItems = 'center';
+                product2Display.style.padding = '15px';
+                product2Display.style.width = '150px';
+                product2Display.innerHTML = `<strong>Option B</strong><br>${product2.quantity}g<br>₹${product2.price}`;
+                
+                bestValueVisual.appendChild(product1Display);
+                bestValueVisual.appendChild(vsDisplay);
+                bestValueVisual.appendChild(product2Display);
+                
+                moneyDisplay.appendChild(bestValueVisual);
+            }
             
             // Clear previous options
             moneyOptions.innerHTML = '';
             
-            // Add money options
-            question.options.forEach(value => {
+            // Add options
+            question.options.forEach(option => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'option';
-                optionElement.textContent = value;
+                optionElement.textContent = option;
                 
                 optionElement.addEventListener('click', () => {
                     document.querySelectorAll('#money-options .option').forEach(el => {
                         el.classList.remove('selected');
                     });
                     optionElement.classList.add('selected');
-                    gameState.currentAnswer = value;
+                    gameState.currentAnswer = option;
                 });
                 
                 moneyOptions.appendChild(optionElement);
